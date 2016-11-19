@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.1.0//EN" "http://www.liferay.com/dtd/liferay-display_6_1_0.dtd">
+
+<display>
+	<category name="category.sample">
+		<portlet id="Demo" />
+		<portlet id="first"></portlet>
+		<portlet id="send"></portlet>
+		<portlet id="receive"></portlet>
+		<portlet id="student-mvc-portlet-action"></portlet>
+		<portlet id="demo"></portlet>
+	</category>
+</display>
