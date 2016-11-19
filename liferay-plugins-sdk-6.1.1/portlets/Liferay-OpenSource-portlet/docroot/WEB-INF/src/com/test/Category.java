@@ -1,9 +1,9 @@
 package com.test;
 
 public class Category {
-    int categoryId;
-    String name;
-    String description;
+    private int categoryId;
+    private String name;
+    private String description;
 	public int getCategoryId() {
 		return categoryId;
 	}

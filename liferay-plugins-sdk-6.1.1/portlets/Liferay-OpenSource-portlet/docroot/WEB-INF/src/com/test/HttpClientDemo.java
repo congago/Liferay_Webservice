@@ -25,17 +25,16 @@ public class HttpClientDemo {
 	 static Category cate[];
 	private final String USER_AGENT = "Mozilla/5.0";
 	Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-	public HttpClientDemo() throws Exception{
-	//	HttpClientDemo clientDemo = new HttpClientDemo();
-		System.out.println("Get");
-		
-		System.out.println("Post");
-		sendPost();
-		sendGet();
-	}
 	
-	// HTTP GET request
-		private void sendGet() throws Exception {
+	
+	public HttpClientDemo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+		// HTTP GET request
+		public void sendGet() throws Exception {
 
 			String url = "http://news-dinhphan.rhcloud.com/category";
 
@@ -64,7 +63,7 @@ public class HttpClientDemo {
 		}
 
 		// HTTP POST request
-		private void sendPost() throws Exception {
+		public void sendPost() throws Exception {
 
 			String url = "http://news-dinhphan.rhcloud.com/category";
 
@@ -76,13 +75,15 @@ public class HttpClientDemo {
           //  cate.setDescription("d");
 			// add header
 			post.setHeader("User-Agent", USER_AGENT);
-			StringEntity postingString = new StringEntity(gson.toJson(Liferay_Open.cata));//gson.tojson() converts your pojo to json
+			StringEntity postingString = new StringEntity(gson.toJson(Liferay_Open.cata), "UTF-8");//gson.tojson() converts your pojo to json
 			post.setEntity(postingString);
 			post.setHeader("Content-type", "application/json");
-			
+			post.addHeader("charset", "UTF-8");
 			HttpResponse response = client.execute(post);
 			System.out.println("\nSending 'POST' request to URL : " + url);
 			System.out.println("Post parameters : " + post.getEntity());
+			System.out.println("from controller to http :"+Liferay_Open.cata.getDescription());
+			System.out.println("from controller to http :"+Liferay_Open.cata.getName());
 			System.out.println("Response Code : " +response.getStatusLine().getStatusCode());
 			BufferedReader rd = new BufferedReader( new InputStreamReader(response.getEntity().getContent()));
 			StringBuffer result = new StringBuffer();
@@ -90,8 +91,36 @@ public class HttpClientDemo {
 			while ((line = rd.readLine()) != null) {
 				result.append(line);
 			}
-
+			if (result.toString().equals("false")) Liferay_Open.isStatus=false;
+			else Liferay_Open.isStatus=true;
 			System.out.println(result.toString());
+
+		}
+		
+		public void getCategoryById(int id) throws Exception {
+
+			String url = "http://news-dinhphan.rhcloud.com/category/"+id;
+
+			@SuppressWarnings("resource")
+			HttpClient client = new DefaultHttpClient();
+			URIBuilder builder = new URIBuilder();
+			builder.setScheme("http").setHost("news-dinhphan.rhcloud.com/category/").setPath(""+id);
+			java.net.URI uri = builder.build();
+			HttpGet request = new HttpGet(uri);
+
+			// add request header
+			request.addHeader("User-Agent", USER_AGENT);
+			
+			HttpResponse response = client.execute(request);
+
+			System.out.println("Response Code : " +
+	                       response.getStatusLine().getStatusCode());
+			BufferedReader rd = new BufferedReader(
+	                       new InputStreamReader(response.getEntity().getContent()));
+			cate= gson.fromJson(rd, Category[].class);
+			
+			for(int i=0;i<cate.length;i++)
+			System.out.println("Name "+cate[i].getName()+",Description:"+cate[i].getDescription()+",Id:"+cate[i].getCategoryId());
 
 		}
 }
